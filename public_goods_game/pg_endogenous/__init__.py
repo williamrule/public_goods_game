@@ -40,7 +40,7 @@ class Subsession(BaseSubsession):
 
 
 class Group(BaseGroup):
-   total_effort = models.IntegerField(initial=0)
+   total_effort = models.FloatField(initial=0)
    firm_size = models.IntegerField(initial=0)
    per_capita_effort = models.FloatField(initial=0)
    per_capita_payout = models.FloatField(initial=0)
@@ -62,7 +62,7 @@ class Player(BasePlayer):
 
 
    # --- Decision (effort allocation) ---
-   effort_to_firm = models.IntegerField(min=0, max=C.ENDOWMENT, initial=0)
+   effort_to_firm = models.FloatField(min=0, max=C.ENDOWMENT, initial=0)
 
 
    # --- Resume / history stats (saved each round so we can display later) ---
@@ -667,14 +667,24 @@ class Decision(Page):
    timeout_seconds = C.DECISION_SECONDS
    form_model = 'player'
    form_fields = ['effort_to_firm']
-   timeout_submission = dict(effort_to_firm=0)
+   timeout_submission = dict(effort_to_firm=0.0)
 
 
    @staticmethod
    def is_displayed(player: Player):
        return len(player.group.get_players()) > 1
 
+   @staticmethod
+   def before_next_page(player: Player, timeout_happened):
+       player.effort_to_firm = round(float(player.effort_to_firm or 0.0), 2)
 
+   @staticmethod
+   def error_message(player: Player, values):
+       x = values.get('effort_to_firm')
+       if x is None:
+           return
+       if abs(x - round(x, 2)) > 1e-9:
+           return "Please choose effort in increments of 0.01."
 
 
 class ResultsWaitPage(WaitPage):

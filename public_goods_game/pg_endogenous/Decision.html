@@ -1,6 +1,137 @@
 {{ block title }}Decision{{ endblock }}
 {{ block content }}
-<p>How many units of effort do you allocate to your firm?</p>
-{{ formfields }}
-{{ next_button }}
+
+<p>You have {{ C.ENDOWMENT }} effort units.</p>
+
+<h4>Your firm</h4>
+
+<div class="firm-grid">
+    {{ for p in group.get_players }}
+    <div class="member-card">
+        <div class="avatar" data-pid="{{ p.id_in_subsession }}">
+            P{{ p.id_in_subsession }}
+        </div>
+        <div class="member-text">
+            <div class="member-name">
+                Participant {{ p.id_in_subsession }}
+                {{ if p.id == player.id }} <strong>(you)</strong> {{ endif }}
+            </div>
+            <div class="member-sub">Firm member</div>
+        </div>
+    </div>
+    {{ endfor }}
+</div>
+
+<form>
+    <div class="slider-wrap">
+        <label for="id_effort_to_firm"><strong>Effort to firm</strong></label>
+        <div class="member-sub">
+            Choose how many units (0–{{ C.ENDOWMENT }}) to allocate to your firm.
+        </div>
+
+        <div class="slider-row">
+            <input
+                type="range"
+                id="id_effort_to_firm"
+                name="effort_to_firm"
+                min="0"
+                max="{{ C.ENDOWMENT }}"
+                step="0.01"
+                value="0"
+            >
+            <output id="effortOut">0.00</output>
+        </div>
+    </div>
+
+    <br>
+    {{ next_button }}
+</form>
+
+<style>
+.firm-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 10px;
+    margin: 12px 0 16px 0;
+}
+.member-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    background: #fafafa;
+}
+.avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    border: 1px solid #d1d5db;
+}
+.member-text {
+    line-height: 1.25;
+    flex: 1;
+}
+.member-name {
+    font-weight: 800;
+}
+.member-sub {
+    font-size: 12px;
+    opacity: 0.75;
+    margin-top: 2px;
+}
+.slider-wrap {
+    margin-top: 14px;
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 14px;
+    background: #fff;
+    max-width: 520px;
+}
+.slider-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+}
+.slider-row output {
+    min-width: 48px;
+    font-weight: 800;
+    text-align: right;
+}
+input[type="range"] {
+    width: 100%;
+}
+</style>
+
+{{ endblock }}
+
+{{ block scripts }}
+<script>
+document.querySelectorAll('.avatar').forEach(a => {
+    const pid = parseInt(a.dataset.pid, 10);
+    const hue = (pid * 47) % 360;
+    a.style.background = `hsl(${hue} 70% 88%)`;
+    a.style.borderColor = `hsl(${hue} 40% 55%)`;
+});
+</script>
+
+<script>
+(function () {
+    const input = document.getElementById('id_effort_to_firm');
+    const out = document.getElementById('effortOut');
+
+    function update() {
+        out.value = Number(input.value).toFixed(2);
+    }
+
+    input.addEventListener('input', update);
+    update();
+})();
+</script>
 {{ endblock }}
