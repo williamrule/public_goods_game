@@ -1,0 +1,12 @@
+.idea/
+.venv/
+*.lnk
+*.zip
+__pycache__/
+*.py[cod]
+*.sqlite3
+.DS_Store
+staticfiles/
+_static_root/
+_bots*/
+__temp*/
