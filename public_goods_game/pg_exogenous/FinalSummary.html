@@ -1,0 +1,51 @@
+{{ block title }}
+Experiment Complete
+{{ endblock }}
+
+
+{{ block content }}
+
+
+<div class="card bg-light m-3">
+   <div class="card-body">
+
+
+       <h2>Congratulations!</h2>
+
+
+       <p>You have completed the experiment.</p>
+
+
+       <hr>
+
+
+       <p><strong>Total points earned:</strong> {{ total_points }}</p>
+
+
+       <p><strong>Exchange rate:</strong> ${{ payout_per_point }} per point</p>
+
+
+       <p><strong>Earnings from points:</strong> ${{ earnings_dollars }}</p>
+
+
+       <p><strong>Participation payment:</strong> ${{ participation_fee }}</p>
+
+
+       <hr>
+
+
+       <h4><strong>Total payout: ${{ total_payment }}</strong></h4>
+
+
+       <p>Thank you for participating.</p>
+
+
+       {{ next_button }}
+
+
+   </div>
+</div>
+
+
+{{ endblock }}
+

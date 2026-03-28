@@ -602,7 +602,10 @@ def set_payoffs(group: Group):
 # ---------------------------
 # Pages
 # ---------------------------
-
+class Tutorial(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == 1
 
 class Formation(Page):
    live_method = live_formation
@@ -743,6 +746,7 @@ class Relay(Page):
 
 
 page_sequence = [
+   Tutorial,
    Formation,
    FormationWaitPage,
    FirmAssignment,
