@@ -1,11 +1,62 @@
 {{ block title }}Results{{ endblock }}
+
 {{ block content }}
 {{ include "pg_endogenous/_scorebar.html" }}
+
+<style>
+  .member-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    margin: 6px 0 10px 0;
+  }
+  .member-badge {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 8px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #fafafa;
+    min-width: 54px;
+  }
+  .member-avatar {
+    width: 26px;
+    height: 26px;
+  }
+  .member-id {
+    font-size: 12px;
+    line-height: 1;
+  }
+  .member-id.me {
+    font-weight: 700;
+  }
+</style>
+
 {% if is_autarkic %}
   <p><b>You are autarkic this period.</b> You earn {{ C.ENDOWMENT }} points.</p>
 {% else %}
   <p><b>Firm size:</b> {{ firm_size }}</p>
-  <p><b>Members:</b> {{ members }}</p>
+
+  <p><b>Members:</b></p>
+  <div class="member-row">
+    {% for pid in members %}
+      <div class="member-badge">
+        <!-- simple “person” icon -->
+        <svg class="member-avatar" viewBox="0 0 64 64" aria-hidden="true">
+          <circle cx="32" cy="22" r="12" fill="#111"></circle>
+          <path d="M10 58c2-16 14-22 22-22s20 6 22 22" fill="#111"></path>
+        </svg>
+
+        <div class="member-id {% if pid == player.id_in_subsession %}me{% endif %}">
+          {{ pid }}{% if pid == player.id_in_subsession %} (you){% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
   <p><b>Total firm effort:</b> {{ group.total_effort }}</p>
   <p><b>Per-capita payout:</b> {{ group.per_capita_payout|to2 }}</p>
   <hr>

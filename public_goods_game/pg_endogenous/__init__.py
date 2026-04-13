@@ -723,7 +723,6 @@ class ResultsWaitPage(WaitPage):
         )
 
 
-
 class Results(Page):
     @staticmethod
     def vars_for_template(player: Player):
@@ -738,8 +737,9 @@ class Results(Page):
 
 
 class Relay(Page):
-    timeout_seconds = C.INFO_SECONDS
-
+    @staticmethod
+    def get_timeout_seconds(player: Player):
+        return player.session.config.get('info_seconds', C.INFO_SECONDS)
     @staticmethod
     def vars_for_template(player: Player):
         rows = []
